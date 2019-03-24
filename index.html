@@ -233,6 +233,283 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/24/HTML为标签设置CSS的三种方法以及权值问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="文仔CXKS NLXX">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你家小麦">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/24/HTML为标签设置CSS的三种方法以及权值问题/" itemprop="url">HTML为标签设置CSS的三种方法以及权值问题</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-03-24T21:03:25+08:00">
+                2019-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>#HTML为标签设置CSS的三种方法以及权值问题</p>
+<p>##内联式<br>内联式是直接把CSS代码写在HTML标签的开始标签中<br>如</p>
+<p></p><p style="color:red; font-size:12px">这里是文字是红色的。</p><p></p>
+<p>##嵌入式<br>嵌入式是把css样式代码直接写在<code>&lt;style type=&quot;text/css&quot;&gt;&lt;/style&gt;</code><br>如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">span&#123;</span><br><span class="line">color:red</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+<p>注意：嵌入式CSS样式代码必须写在<code>&lt;style&gt;&lt;/style&gt;</code>之间，且一般会写在<code>&lt;head&gt;&lt;/head&gt;</code>之间</p>
+<p>##外部式(外联式)<br>外联式是把css代码写到一个单独的外部文件中，然后文件名是以“.css”为扩展名，在<code>&lt;head&gt;</code>标签内用<code>&lt;link&gt;</code>标签将css样式代码文件链接到HTML文件内。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&quot;base.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：<br>rel=”stylesheet” type=”text/css”是固定写法不能修改</p>
+<p>##三种方法的优先级<br>优先级：<strong>内联式&gt;嵌入式&gt;外部式</strong><br><strong>注意</strong>：嵌入式&gt;外部式有一个前提：嵌入式css样式的位置一定在外部式的后面<br>其实就是<strong>就近原则</strong>（离被设置元素越近优先级越高）<br><strong>但是上面总结的优先级是在内联式、嵌入式、外部式样式表中css样式是在相同权值的情况下的</strong></p>
+<p>##css样式的权值<br>浏览器是根据权值来判断使用哪种CSS样式的，哪种权值高就使用哪种<br>规则：<strong>标签的权值为1，类选择符的权值为10，ID选择的权值最高为100</strong><br>例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p&#123;color:red;&#125; /*权值为1*/</span><br><span class="line">p span&#123;color:green;&#125; /*权值为1+1=2*/</span><br><span class="line">.warning&#123;color:white;&#125; /*权值为10*/</span><br><span class="line">p span.warning&#123;color:purple;&#125; /*权值为1+1+10=12*/</span><br><span class="line">#footer .note p&#123;color:yellow;&#125; /*权值为100+10+1=111*/</span><br></pre></td></tr></table></figure>
+<p><strong>注意</strong>：内联式其实最高的，无论嵌入式和外联式的权值多高，如果该标签有内联式的话，就采用内联式的css<br>例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;嵌入式css样式&lt;/title&gt;</span><br><span class="line">&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</span><br><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">#id&#123;</span><br><span class="line">   color:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;p&gt;慕课网，&lt;span id=&quot;sp&quot; style=&quot;color:pink&quot;&gt;超酷的互联网&lt;/span&gt;、IT技术免费学习平台，创新的网络一站式学习、实践体验；服务及时贴心，内容专业、有趣易学。专注服务互联网工程师快速成为技术高手！&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>[图片上传失败…(image-5dfdae-1543072596326)]</p>
+<p>上面例子中，用了权值为100的id选择器，但是最终结果是字的样式是按照<strong>内联式</strong>的样式。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/24/域名/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="文仔CXKS NLXX">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/head.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="你家小麦">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/24/域名/" itemprop="url">域名</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">發表於</span>
+              
+              <time title="創建於" itemprop="dateCreated datePublished" datetime="2019-03-24T21:00:37+08:00">
+                2019-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h1><p><strong>域名</strong>又叫<strong>网域</strong>，全称<strong>网域名称</strong>（英语：Domain Name,）是由<strong>一串用点分隔的字符串组成</strong>的互联网上某一台计算机或计算机组的名称。<br><strong>作用</strong>：用于在数据传输时标识计算机的电子方位。域名可以说是一个IP地址的代称，目的是为了便于记忆后者。<br><strong>例子</strong>：wikipedia.org是一个域名，与IP地址208.80.152.2相对应。人们可以直接访问wikipedia.org来代替IP地址，然后<strong>域名系统</strong>（DNS）就会将域名转变为机器识别的ip地址。这样一来，人们只需记住域名，而不需要记住难记的数字。</p>
+<hr>
+<h2 id="域名的目的与特性"><a href="#域名的目的与特性" class="headerlink" title="域名的目的与特性"></a>域名的目的与特性</h2><p><strong>IP地址</strong>是因特网主机作为路由寻址用的数字体标识，不容易记忆，所以产生了域名，<strong>域名的目的就是为数字化的互联网资源提供易于记忆的名称。</strong><br>特性：</p>
+<ol>
+<li>唯一性。</li>
+<li>在资源改IP地址时，只需要进行新IP地址与恒定域名的转换，即可实现资源移动到网络地址拓扑中的不同物理位置。</li>
+</ol>
+<hr>
+<h2 id="域名层次"><a href="#域名层次" class="headerlink" title="域名层次"></a>域名层次</h2><p><strong>顶级域名</strong>（TLD）是域名的最高一级，<strong>每个域名都以顶级域名结尾</strong><br>一些顶级域名列举</p>
+<ol>
+<li>.com：用于商业，现在是全球注册量最大、最通用的域名</li>
+<li>.edu：用于教育机构、很多学校网站都是用edu作为顶级域名</li>
+<li>.net：被定位于网络基础服务提供商</li>
+<li>.org：用于非盈利组织（如公益类的）</li>
+<li>.gov：用于政府，主要是美国政府的网站</li>
+<li>.int：国际组织<br><strong>备注</strong>：上面的顶级域名不用记住，有需要的话，找一下就好了</li>
+</ol>
+<hr>
+<p><strong>二级域名</strong>二级域名位于顶级域名的左侧。如<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 其中baidu就是他的二级域名，又如zh.wikipedia.org中 wikipedia就是二级域名。<br><strong>三级域名</strong>三级域名位于二级域名的左侧，如zh.wikipedia.org中的zh就是三级域名<br>其他级别的域名以此类推，但一般域名级别<strong>不会超过五层</strong></p>
+<hr>
+<h2 id="域名层次的另一种说法（目前暂未有一个定论-来自维基百科）"><a href="#域名层次的另一种说法（目前暂未有一个定论-来自维基百科）" class="headerlink" title="域名层次的另一种说法（目前暂未有一个定论-来自维基百科）"></a>域名层次的另一种说法（目前暂未有一个定论-来自维基百科）</h2><p>这种说法是通过域名有多少个 <strong>点去判断是几级域名</strong>。<strong>如<a href="http://www.baidu.com这里有两个点，因此被称为二级域名，而baidu.com被称为一级域名，.com则被称为顶级域名。" target="_blank" rel="noopener">www.baidu.com这里有两个点，因此被称为二级域名，而baidu.com被称为一级域名，.com则被称为顶级域名。</a></strong><br>但。<strong>无论如何那种说法，完整域名的所有字符加起来都是不得超过253个ASCII字符的总长度。</strong></p>
+<hr>
+<p><a href="https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D" target="_blank" rel="noopener">本文章主要信息来源于维基百科</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/23/我的第一篇博客/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -516,7 +793,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">文章</span>
                 </a>
               </div>
