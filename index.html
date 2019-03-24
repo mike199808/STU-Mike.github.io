@@ -191,6 +191,16 @@
         </li>
       
         
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br>
+            
+            標籤
+          </a>
+        </li>
+      
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -304,17 +314,16 @@
       
         
           
-            <p>#HTML为标签设置CSS的三种方法以及权值问题</p>
-<p>##内联式<br>内联式是直接把CSS代码写在HTML标签的开始标签中<br>如</p>
+            <h1 id="HTML为标签设置CSS的三种方法以及权值问题"><a href="#HTML为标签设置CSS的三种方法以及权值问题" class="headerlink" title="HTML为标签设置CSS的三种方法以及权值问题"></a>HTML为标签设置CSS的三种方法以及权值问题</h1><h2 id="内联式"><a href="#内联式" class="headerlink" title="内联式"></a>内联式</h2><p>内联式是直接把CSS代码写在HTML标签的开始标签中<br>如</p>
 <p></p><p style="color:red; font-size:12px">这里是文字是红色的。</p><p></p>
 <p>##嵌入式<br>嵌入式是把css样式代码直接写在<code>&lt;style type=&quot;text/css&quot;&gt;&lt;/style&gt;</code><br>如</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">span&#123;</span><br><span class="line">color:red</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
 <p>注意：嵌入式CSS样式代码必须写在<code>&lt;style&gt;&lt;/style&gt;</code>之间，且一般会写在<code>&lt;head&gt;&lt;/head&gt;</code>之间</p>
-<p>##外部式(外联式)<br>外联式是把css代码写到一个单独的外部文件中，然后文件名是以“.css”为扩展名，在<code>&lt;head&gt;</code>标签内用<code>&lt;link&gt;</code>标签将css样式代码文件链接到HTML文件内。</p>
+<h2 id="外部式-外联式"><a href="#外部式-外联式" class="headerlink" title="外部式(外联式)"></a>外部式(外联式)</h2><p>外联式是把css代码写到一个单独的外部文件中，然后文件名是以“.css”为扩展名，在<code>&lt;head&gt;</code>标签内用<code>&lt;link&gt;</code>标签将css样式代码文件链接到HTML文件内。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&quot;base.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;</span><br></pre></td></tr></table></figure>
 <p><strong>注意</strong>：<br>rel=”stylesheet” type=”text/css”是固定写法不能修改</p>
-<p>##三种方法的优先级<br>优先级：<strong>内联式&gt;嵌入式&gt;外部式</strong><br><strong>注意</strong>：嵌入式&gt;外部式有一个前提：嵌入式css样式的位置一定在外部式的后面<br>其实就是<strong>就近原则</strong>（离被设置元素越近优先级越高）<br><strong>但是上面总结的优先级是在内联式、嵌入式、外部式样式表中css样式是在相同权值的情况下的</strong></p>
-<p>##css样式的权值<br>浏览器是根据权值来判断使用哪种CSS样式的，哪种权值高就使用哪种<br>规则：<strong>标签的权值为1，类选择符的权值为10，ID选择的权值最高为100</strong><br>例子</p>
+<h2 id="三种方法的优先级"><a href="#三种方法的优先级" class="headerlink" title="三种方法的优先级"></a>三种方法的优先级</h2><p>优先级：<strong>内联式&gt;嵌入式&gt;外部式</strong><br><strong>注意</strong>：嵌入式&gt;外部式有一个前提：嵌入式css样式的位置一定在外部式的后面<br>其实就是<strong>就近原则</strong>（离被设置元素越近优先级越高）<br><strong>但是上面总结的优先级是在内联式、嵌入式、外部式样式表中css样式是在相同权值的情况下的</strong></p>
+<h2 id="css样式的权值"><a href="#css样式的权值" class="headerlink" title="css样式的权值"></a>css样式的权值</h2><p>浏览器是根据权值来判断使用哪种CSS样式的，哪种权值高就使用哪种<br>规则：<strong>标签的权值为1，类选择符的权值为10，ID选择的权值最高为100</strong><br>例子</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p&#123;color:red;&#125; /*权值为1*/</span><br><span class="line">p span&#123;color:green;&#125; /*权值为1+1=2*/</span><br><span class="line">.warning&#123;color:white;&#125; /*权值为10*/</span><br><span class="line">p span.warning&#123;color:purple;&#125; /*权值为1+1+10=12*/</span><br><span class="line">#footer .note p&#123;color:yellow;&#125; /*权值为100+10+1=111*/</span><br></pre></td></tr></table></figure>
 <p><strong>注意</strong>：内联式其实最高的，无论嵌入式和外联式的权值多高，如果该标签有内联式的话，就采用内联式的css<br>例子</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;嵌入式css样式&lt;/title&gt;</span><br><span class="line">&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</span><br><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">#id&#123;</span><br><span class="line">   color:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;p&gt;慕课网，&lt;span id=&quot;sp&quot; style=&quot;color:pink&quot;&gt;超酷的互联网&lt;/span&gt;、IT技术免费学习平台，创新的网络一站式学习、实践体验；服务及时贴心，内容专业、有趣易学。专注服务互联网工程师快速成为技术高手！&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
@@ -801,6 +810,15 @@
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">標籤</span>
+                </a>
+              </div>
             
 
           </nav>
