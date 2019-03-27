@@ -386,6 +386,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/26/阮一峰es6第四章读书笔记-字符串的扩展/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/26/阮一峰es6第四章读书笔记-字符串的扩展/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -412,154 +422,20 @@
       
         
           
-            <h1 id="阮一峰es6第四章读书笔记-字符串的扩展"><a href="#阮一峰es6第四章读书笔记-字符串的扩展" class="headerlink" title="阮一峰es6第四章读书笔记-字符串的扩展"></a>阮一峰es6第四章读书笔记-字符串的扩展</h1><h2 id="字符的Unicode表示法"><a href="#字符的Unicode表示法" class="headerlink" title="字符的Unicode表示法"></a>字符的Unicode表示法</h2><h3 id="四字节的UTF-16b方法"><a href="#四字节的UTF-16b方法" class="headerlink" title="四字节的UTF-16b方法"></a>四字节的UTF-16b方法</h3><ol>
-<li>形式：<code>\uxxxx</code>，其中xxxx是字符的Unicode码点</li>
-<li><p>例子</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;\u0061&quot;</span><br><span class="line">// &quot;a&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>缺陷：这种表示法只能限于码点在<code>\u0000</code>~<code>\uFFFF</code>之间的字符，而超出范围的字符，必须用两个双字节表示</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;\uD842\uDFB7&quot;</span><br><span class="line">// &quot;𠮷&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解决办法：es6的大括号表示法</p>
-<h3 id="es6大括号表示法：将码点放进大括号，就能正确解读该字符"><a href="#es6大括号表示法：将码点放进大括号，就能正确解读该字符" class="headerlink" title="es6大括号表示法：将码点放进大括号，就能正确解读该字符"></a>es6大括号表示法：将码点放进大括号，就能正确解读该字符</h3> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&quot;\u&#123;20BB7&#125;&quot;</span><br><span class="line">// &quot;𠮷&quot;</span><br><span class="line"></span><br><span class="line">&quot;\u&#123;41&#125;\u&#123;42&#125;\u&#123;43&#125;&quot;</span><br><span class="line">// &quot;ABC&quot;</span><br><span class="line"></span><br><span class="line">let hello = 123;</span><br><span class="line">hell\u&#123;6F&#125; // 123</span><br><span class="line"></span><br><span class="line">&apos;\u&#123;1F680&#125;&apos; === &apos;\uD83D\uDE80&apos;</span><br><span class="line">// true</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="codePointAt"><a href="#codePointAt" class="headerlink" title="codePointAt()"></a>codePointAt()</h2><ol>
-<li><p>javascript内部，字符以UTF-16的格式存储，所以对于4个字节存储的字符（Unicode码点大于OxFFFF的字符），javascript会认为他们是两个字符</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">var s = &quot;𠮷&quot;;</span><br><span class="line"></span><br><span class="line">s.length // 2</span><br><span class="line">s.charAt(0) // &apos;&apos;</span><br><span class="line">s.charAt(1) // &apos;&apos;</span><br><span class="line">s.charCodeAt(0) // 55362</span><br><span class="line">s.charCodeAt(1) // 57271</span><br></pre></td></tr></table></figure>
-<p> 上面例子中，”𠮷”需要4个字节存储，所以js不能正常处理，它被误判为长度为2，而且charAt方法无法读取整个字符，charCodeAt方法只能分别返回前两个字节和后两个字节的值</p>
-</li>
-<li><p>解决方法：<code>codePointAt（）</code>方法</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let s = &apos;𠮷a&apos;;</span><br><span class="line"></span><br><span class="line">s.codePointAt(0) // 134071</span><br><span class="line">s.codePointAt(1) // 57271</span><br><span class="line"></span><br><span class="line">s.codePointAt(2) // 97</span><br></pre></td></tr></table></figure>
-<p> <code>codePointAt</code>正确识别出了“𠮷”，他的十进制码点是134071，而第二个<br> 是”𠮷“后面的两个字节，第三个字符才是”a”，可以看出<code>codePointAt（）</code><br> 能够正确的识别出32位的字符。</p>
-</li>
-<li><p><code>codePointAt</code>返回十六进制方法，用toString（）方法</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">let s = &apos;𠮷a&apos;;</span><br><span class="line"></span><br><span class="line">s.codePointAt(0).toString(16) // &quot;20bb7&quot;</span><br><span class="line">s.codePointAt(2).toString(16) // &quot;61&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p><code>解决codePointAt（）</code>位置不对的方法：使用for….of循环，因为它会正确识别32位的UTF-16字符</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let s = &apos;𠮷a&apos;;</span><br><span class="line">for (let ch of s) &#123;</span><br><span class="line">  console.log(ch.codePointAt(0).toString(16));</span><br><span class="line">&#125;</span><br><span class="line">// 20bb7</span><br><span class="line">// 61</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>应用：测试一个字符串由两个字节还是四个字节组成</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function is32Bit(c) &#123;</span><br><span class="line">  return c.codePointAt(0) &gt; 0xFFFF;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">is32Bit(&quot;𠮷&quot;) // true</span><br><span class="line">is32Bit(&quot;a&quot;) // false</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="String-fromCodePoint"><a href="#String-fromCodePoint" class="headerlink" title="String.fromCodePoint()"></a>String.fromCodePoint()</h2><ol>
-<li>ES5提供了<code>String.fromCharCode（）</code>方法，用于从码点返回对应字符，但确定是不能识别32位的UTF-16字符（Unicode编码大于OxFFFF）</li>
-<li><p>解决：ES6提供了<code>String.fromCodePoint</code>方法，可以识别大于OxFFFF的字符。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">String.fromCodePoint(0x20BB7)</span><br><span class="line">// &quot;𠮷&quot;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="字符串的遍历器接口"><a href="#字符串的遍历器接口" class="headerlink" title="字符串的遍历器接口"></a>字符串的遍历器接口</h2><ol>
-<li>ES6为字符串添加了遍历器接口，使得字符串可以被for…of循环遍历。</li>
-<li><p>遍历器更大的有点事可以识别大于OxFFFF的码点，传统的for循环无法识别这样的码点</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">let text = String.fromCodePoint(0x20BB7);</span><br><span class="line"></span><br><span class="line">for (let i = 0; i &lt; text.length; i++) &#123;</span><br><span class="line">  console.log(text[i]);</span><br><span class="line">&#125;</span><br><span class="line">// &quot; &quot;</span><br><span class="line">// &quot; &quot;</span><br><span class="line"></span><br><span class="line">for (let i of text) &#123;</span><br><span class="line">  console.log(i);</span><br><span class="line">&#125;</span><br><span class="line">// &quot;𠮷&quot;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="normalize（）"><a href="#normalize（）" class="headerlink" title="normalize（）"></a>normalize（）</h2><ol>
-<li><p>问题：js不能识别unicode直接提供带重音符号的字符与合成重音符号字符。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&apos;\u01D1&apos;===&apos;\u004F\u030C&apos; //false</span><br><span class="line"></span><br><span class="line">&apos;\u01D1&apos;.length // 1</span><br><span class="line">&apos;\u004F\u030C&apos;.length // 2</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>解决方法 <code>normalize</code>方法，作用是将字符的不同表示方法同意为同样的形式。称为Unicode正规化。</p>
-</li>
-<li>参数：一个参数指定normalize的方式<ul>
-<li>NFC，默认参数，表示“标准等价合成”</li>
-<li>NFD，表示”标准等价分解”</li>
-<li>NFKC，表示“兼容等价合成”</li>
-<li>NFKD，表示”兼容等价分解“<h2 id="includes（），startsWith（），endsWith（）"><a href="#includes（），startsWith（），endsWith（）" class="headerlink" title="includes（），startsWith（），endsWith（）"></a>includes（），startsWith（），endsWith（）</h2></li>
-</ul>
-</li>
-<li>作用：确定一个字符串是否包含在另一个字符串中。</li>
-<li>es6新方法<ul>
-<li>incdlues（）：放回布尔值，表示是否找到了参数字符串</li>
-<li>startsWith（）：返回布尔值，表示参数字符串是否在原字符串的头部</li>
-<li>endsWith（）：返回布尔值，表示参数字符串是否在原字符的尾部</li>
-</ul>
-</li>
-<li>参数：第一个参数是字符串，第二个参数是指定开始搜索的位置<h2 id="repeat（）"><a href="#repeat（）" class="headerlink" title="repeat（）"></a>repeat（）</h2></li>
-<li><p>作用：将字符串重复n次，并返回。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;x&apos;.repeat(3) // &quot;xxx&quot;</span><br><span class="line">&apos;hello&apos;.repeat(2) // &quot;hellohello&quot;</span><br><span class="line">&apos;na&apos;.repeat(0) // &quot;&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>参数：表示重复的次数，只能是正整数，小数只取整数部分，字符串会先转换成数字其他情况会报错</p>
-<h2 id="padStart（），padEnd（）"><a href="#padStart（），padEnd（）" class="headerlink" title="padStart（），padEnd（）"></a>padStart（），padEnd（）</h2></li>
-<li><p>ES2017引入了字符串补全长度的功能，padStart（）用于头部补全，padEnd（）用于尾部补全</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&apos;x&apos;.padStart(5, &apos;ab&apos;) // &apos;ababx&apos;</span><br><span class="line">&apos;x&apos;.padStart(4, &apos;ab&apos;) // &apos;abax&apos;</span><br><span class="line"></span><br><span class="line">&apos;x&apos;.padEnd(5, &apos;ab&apos;) // &apos;xabab&apos;</span><br><span class="line">&apos;x&apos;.padEnd(4, &apos;ab&apos;) // &apos;xaba&apos;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>参数，第一个参数指定字符串的长度，第二个参数是用来补全的字符串。如果原字符串长度等于或大于最大长度，则返回原字符串，补全字符串与原字符串长度之和超过最大长度的话，就会截去超出位数的补全字符串</p>
-</li>
-<li><p>应用</p>
-<ul>
-<li><p>为数值补全指定位数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&apos;1&apos;.padStart(10, &apos;0&apos;) // &quot;0000000001&quot;</span><br><span class="line">&apos;12&apos;.padStart(10, &apos;0&apos;) // &quot;0000000012&quot;</span><br><span class="line">&apos;123456&apos;.padStart(10, &apos;0&apos;) // &quot;0000123456&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>提示字符串格式</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&apos;12&apos;.padStart(10, &apos;YYYY-MM-DD&apos;) // &quot;YYYY-MM-12&quot;</span><br><span class="line">&apos;09-12&apos;.padStart(10, &apos;YYYY-MM-DD&apos;) // &quot;YYYY-09-12&quot;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ol>
-<h2 id="模板字符串"><a href="#模板字符串" class="headerlink" title="模板字符串"></a>模板字符串</h2><ol>
-<li><p>传统的javascript输出模板写法相当繁琐，es6引入了模板字符串解决了问题。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(&apos;#result&apos;).append(`</span><br><span class="line">  There are &lt;b&gt;$&#123;basket.count&#125;&lt;/b&gt; items</span><br><span class="line">   in your basket, &lt;em&gt;$&#123;basket.onSale&#125;&lt;/em&gt;</span><br><span class="line">  are on sale!</span><br><span class="line">`);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>字符串用反引号（‘）标识，其中，所有的空格和缩进都会保留输出之中，但可以用trim方法消除，而变量需要写在${}之中，而${}中可以调用表达式，引用对象，还能调用函数，</p>
-<ol start="2">
-<li><p>模板字符串能够嵌套</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">const tmpl = addrs =&gt; `</span><br><span class="line">  &lt;table&gt;</span><br><span class="line">  $&#123;addrs.map(addr =&gt; `</span><br><span class="line">    &lt;tr&gt;&lt;td&gt;$&#123;addr.first&#125;&lt;/td&gt;&lt;/tr&gt;</span><br><span class="line">    &lt;tr&gt;&lt;td&gt;$&#123;addr.last&#125;&lt;/td&gt;&lt;/tr&gt;</span><br><span class="line">  `).join(&apos;&apos;)&#125;</span><br><span class="line">  &lt;/table&gt;</span><br><span class="line">`;</span><br></pre></td></tr></table></figure>
-<p> 使用方法</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">const data = [</span><br><span class="line">    &#123; first: &apos;&lt;Jane&gt;&apos;, last: &apos;Bond&apos; &#125;,</span><br><span class="line">    &#123; first: &apos;Lars&apos;, last: &apos;&lt;Croft&gt;&apos; &#125;,</span><br><span class="line">];</span><br><span class="line"></span><br><span class="line">console.log(tmpl(data));</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="实例：模板编译"><a href="#实例：模板编译" class="headerlink" title="实例：模板编译"></a>实例：模板编译</h2><ol>
-<li><p>先写一个模板字符串如</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">let template = `</span><br><span class="line">&lt;ul&gt;</span><br><span class="line">  &lt;% for(let i=0; i &lt; data.supplies.length; i++) &#123; %&gt;</span><br><span class="line">    &lt;li&gt;&lt;%= data.supplies[i] %&gt;&lt;/li&gt;</span><br><span class="line">  &lt;% &#125; %&gt;</span><br><span class="line">&lt;/ul&gt;</span><br><span class="line">`;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>编译模板方法-使用正则表达式将其转换为JavaScript表达式字符串</p>
-</li>
-<li><p>将其封装到一个函数里面<br>如</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function compile(template)&#123;</span><br><span class="line">  const evalExpr = /&lt;%=(.+?)%&gt;/g;</span><br><span class="line">  const expr = /&lt;%([\s\S]+?)%&gt;/g;</span><br><span class="line"></span><br><span class="line">  template = template</span><br><span class="line">    .replace(evalExpr, &apos;`); \n  echo( $1 ); \n  echo(`&apos;)</span><br><span class="line">    .replace(expr, &apos;`); \n $1 \n  echo(`&apos;);</span><br><span class="line"></span><br><span class="line">  template = &apos;echo(`&apos; + template + &apos;`);&apos;;</span><br><span class="line"></span><br><span class="line">  let script =</span><br><span class="line">  `(function parse(data)&#123;</span><br><span class="line">    let output = &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    function echo(html)&#123;</span><br><span class="line">      output += html;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    $&#123; template &#125;</span><br><span class="line"></span><br><span class="line">    return output;</span><br><span class="line">  &#125;)`;</span><br><span class="line"></span><br><span class="line">  return script;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="标签模板"><a href="#标签模板" class="headerlink" title="标签模板"></a>标签模板</h3><ol>
-<li><p>定义：使用模板字符串作为函数参数的使用方法叫做”标签模板“</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">alert`123`</span><br><span class="line">// 等同于</span><br><span class="line">alert(123)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>如果模板字符串中有变量，那么模板字符串先会将其处理成多个参数，再调用函数。处理的方法是，变量之外的内容组成一个数组，作为第一个参数，而一个变量做一个参数，从第二个参数排下去。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">let a = 5;</span><br><span class="line">let b = 10;</span><br><span class="line"></span><br><span class="line">tag`Hello $&#123; a + b &#125; world $&#123; a * b &#125;`;</span><br><span class="line">// 等同于</span><br><span class="line">tag([&apos;Hello &apos;, &apos; world &apos;, &apos;&apos;], 15, 50);</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>”标签模板“的应用</p>
-<ul>
-<li><p>过滤HTML字符串，防止用户输入恶意内容。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> let message =</span><br><span class="line">  SaferHTML`&lt;p&gt;$&#123;sender&#125; has sent you a message.&lt;/p&gt;`;</span><br><span class="line"></span><br><span class="line">function SaferHTML(templateData) &#123;</span><br><span class="line">  let s = templateData[0];</span><br><span class="line">  for (let i = 1; i &lt; arguments.length; i++) &#123;</span><br><span class="line">    let arg = String(arguments[i]);</span><br><span class="line"></span><br><span class="line">    // Escape special characters in the substitution.</span><br><span class="line">    s += arg.replace(/&amp;/g, &quot;&amp;amp;&quot;)</span><br><span class="line">            .replace(/&lt;/g, &quot;&amp;lt;&quot;)</span><br><span class="line">            .replace(/&gt;/g, &quot;&amp;gt;&quot;);</span><br><span class="line"></span><br><span class="line">    // Don&apos;t escape special characters in the template.</span><br><span class="line">    s += templateData[i];</span><br><span class="line">  &#125;</span><br><span class="line">  return s;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>多语言转换</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">i18n`Welcome to $&#123;siteName&#125;, you are visitor number $&#123;visitorNumber&#125;!`</span><br><span class="line">// &quot;欢迎访问xxx，您是第xxxx位访问者！&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>在js中嵌入其他语言</p>
-<h2 id="String-raw"><a href="#String-raw" class="headerlink" title="String.raw()"></a>String.raw()</h2><p>ES6为原生的String对象，提供了一个<code>raw</code>方法</p>
-</li>
-</ul>
-</li>
-<li><p>作用：充当模板字符串的处理函数，返回一个斜杠都被转义（即斜杠前面再加一个斜杠）的字符串，并把变量替换的字符串。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String.raw`Hi\n$&#123;2+3&#125;!`;</span><br><span class="line">// 返回 &quot;Hi\\n5!&quot;</span><br><span class="line"></span><br><span class="line">String.raw`Hi\u000A!`;</span><br><span class="line">// 返回 &quot;Hi\\u000A!&quot;</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>当作为一个正常函数使用时，它的第一个参数应该是一个具有<code>raw</code>属性的对象，且raw属性的值应该是一个数组。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String.raw(&#123; raw: &apos;test&apos; &#125;, 0, 1, 2);</span><br><span class="line">// &apos;t0e1s2t&apos;</span><br><span class="line"></span><br><span class="line">// 等同于</span><br><span class="line">String.raw(&#123; raw: [&apos;t&apos;,&apos;e&apos;,&apos;s&apos;,&apos;t&apos;] &#125;, 0, 1, 2);</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="模板字符串的限制"><a href="#模板字符串的限制" class="headerlink" title="模板字符串的限制"></a>模板字符串的限制</h2><ol>
-<li><p>当在标签模板里面嵌入其他语言时，模板字符串默认会将字符串转义，导致无法嵌入其他语言。</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">function latex(strings) &#123;</span><br><span class="line">  // ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">let document = latex`</span><br><span class="line">\newcommand&#123;\fun&#125;&#123;\textbf&#123;Fun!&#125;&#125;  // 正常工作</span><br><span class="line">\newcommand&#123;\unicode&#125;&#123;\textbf&#123;Unicode!&#125;&#125; // 报错</span><br><span class="line">\newcommand&#123;\xerxes&#125;&#123;\textbf&#123;King!&#125;&#125; // 报错</span><br><span class="line"></span><br><span class="line">Breve over the h goes \u&#123;h&#125;ere // 报错</span><br></pre></td></tr></table></figure>
-<ol start="2">
-<li><p>ES2018放送了对标签模板里面的字符串转义的限制，遇到不合法的字符串转义就返回undefined，并可以从raw属性上面可以得到原始字符串</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function tag(strs) &#123;</span><br><span class="line">  strs[0] === undefined</span><br><span class="line">  strs.raw[0] === &quot;\\unicode and \\u&#123;55&#125;&quot;;</span><br><span class="line">&#125;</span><br><span class="line">tag`\unicode and \u&#123;55&#125;`</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-</li>
-</ol>
-<p>参考资料：<a href="http://es6.ruanyifeng.com/#docs/string" target="_blank" rel="noopener">阮一峰es入门</a></p>
+          阮一峰es6第四章读书笔记-字符串的扩展字符的Unicode表示法四字节的UTF-16b方法
+形式：\uxxxx，其中xxxx是字符的Unicode码点
+例子
+ 12&quot;\u0061&quot;// &quot;a&quot;
 
-          
+缺陷：这种表示法只能限于码点在\u0000~\uFFFF之间的
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/26/阮一峰es6第四章读书笔记-字符串的扩展/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -695,6 +571,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/24/HTML为标签设置CSS的三种方法以及权值问题/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/24/HTML为标签设置CSS的三种方法以及权值问题/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -721,23 +607,18 @@
       
         
           
-            <h1 id="HTML为标签设置CSS的三种方法以及权值问题"><a href="#HTML为标签设置CSS的三种方法以及权值问题" class="headerlink" title="HTML为标签设置CSS的三种方法以及权值问题"></a>HTML为标签设置CSS的三种方法以及权值问题</h1><h2 id="内联式"><a href="#内联式" class="headerlink" title="内联式"></a>内联式</h2><p>内联式是直接把CSS代码写在HTML标签的开始标签中<br>如</p>
-<p></p><p style="color:red; font-size:12px">这里是文字是红色的。</p><p></p>
-<p>##嵌入式<br>嵌入式是把css样式代码直接写在<code>&lt;style type=&quot;text/css&quot;&gt;&lt;/style&gt;</code><br>如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">span&#123;</span><br><span class="line">color:red</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
-<p>注意：嵌入式CSS样式代码必须写在<code>&lt;style&gt;&lt;/style&gt;</code>之间，且一般会写在<code>&lt;head&gt;&lt;/head&gt;</code>之间</p>
-<h2 id="外部式-外联式"><a href="#外部式-外联式" class="headerlink" title="外部式(外联式)"></a>外部式(外联式)</h2><p>外联式是把css代码写到一个单独的外部文件中，然后文件名是以“.css”为扩展名，在<code>&lt;head&gt;</code>标签内用<code>&lt;link&gt;</code>标签将css样式代码文件链接到HTML文件内。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;link href=&quot;base.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;/&gt;</span><br></pre></td></tr></table></figure>
-<p><strong>注意</strong>：<br>rel=”stylesheet” type=”text/css”是固定写法不能修改</p>
-<h2 id="三种方法的优先级"><a href="#三种方法的优先级" class="headerlink" title="三种方法的优先级"></a>三种方法的优先级</h2><p>优先级：<strong>内联式&gt;嵌入式&gt;外部式</strong><br><strong>注意</strong>：嵌入式&gt;外部式有一个前提：嵌入式css样式的位置一定在外部式的后面<br>其实就是<strong>就近原则</strong>（离被设置元素越近优先级越高）<br><strong>但是上面总结的优先级是在内联式、嵌入式、外部式样式表中css样式是在相同权值的情况下的</strong></p>
-<h2 id="css样式的权值"><a href="#css样式的权值" class="headerlink" title="css样式的权值"></a>css样式的权值</h2><p>浏览器是根据权值来判断使用哪种CSS样式的，哪种权值高就使用哪种<br>规则：<strong>标签的权值为1，类选择符的权值为10，ID选择的权值最高为100</strong><br>例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">p&#123;color:red;&#125; /*权值为1*/</span><br><span class="line">p span&#123;color:green;&#125; /*权值为1+1=2*/</span><br><span class="line">.warning&#123;color:white;&#125; /*权值为10*/</span><br><span class="line">p span.warning&#123;color:purple;&#125; /*权值为1+1+10=12*/</span><br><span class="line">#footer .note p&#123;color:yellow;&#125; /*权值为100+10+1=111*/</span><br></pre></td></tr></table></figure>
-<p><strong>注意</strong>：内联式其实最高的，无论嵌入式和外联式的权值多高，如果该标签有内联式的话，就采用内联式的css<br>例子</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE HTML&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">&lt;meta http-equiv=&quot;Content-Type&quot; content=&quot;text/html; charset=utf-8&quot;&gt;</span><br><span class="line">&lt;title&gt;嵌入式css样式&lt;/title&gt;</span><br><span class="line">&lt;link href=&quot;style.css&quot; rel=&quot;stylesheet&quot; type=&quot;text/css&quot;&gt;</span><br><span class="line">&lt;style type=&quot;text/css&quot;&gt;</span><br><span class="line">#id&#123;</span><br><span class="line">   color:red;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/style&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;p&gt;慕课网，&lt;span id=&quot;sp&quot; style=&quot;color:pink&quot;&gt;超酷的互联网&lt;/span&gt;、IT技术免费学习平台，创新的网络一站式学习、实践体验；服务及时贴心，内容专业、有趣易学。专注服务互联网工程师快速成为技术高手！&lt;/p&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
-<p>[图片上传失败…(image-5dfdae-1543072596326)]</p>
-<p>上面例子中，用了权值为100的id选择器，但是最终结果是字的样式是按照<strong>内联式</strong>的样式。</p>
-
-          
+          HTML为标签设置CSS的三种方法以及权值问题内联式内联式是直接把CSS代码写在HTML标签的开始标签中如
+这里是文字是红色的。
+##嵌入式嵌入式是把css样式代码直接写在&lt;style type=&quot;text/css&quot;&gt;&lt;/style&gt;如
+12345&lt;
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/24/HTML为标签设置CSS的三种方法以及权值问题/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -829,6 +710,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/24/域名/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/24/域名/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -855,31 +746,15 @@
       
         
           
-            <h1 id="域名"><a href="#域名" class="headerlink" title="域名"></a>域名</h1><p><strong>域名</strong>又叫<strong>网域</strong>，全称<strong>网域名称</strong>（英语：Domain Name,）是由<strong>一串用点分隔的字符串组成</strong>的互联网上某一台计算机或计算机组的名称。<br><strong>作用</strong>：用于在数据传输时标识计算机的电子方位。域名可以说是一个IP地址的代称，目的是为了便于记忆后者。<br><strong>例子</strong>：wikipedia.org是一个域名，与IP地址208.80.152.2相对应。人们可以直接访问wikipedia.org来代替IP地址，然后<strong>域名系统</strong>（DNS）就会将域名转变为机器识别的ip地址。这样一来，人们只需记住域名，而不需要记住难记的数字。</p>
-<hr>
-<h2 id="域名的目的与特性"><a href="#域名的目的与特性" class="headerlink" title="域名的目的与特性"></a>域名的目的与特性</h2><p><strong>IP地址</strong>是因特网主机作为路由寻址用的数字体标识，不容易记忆，所以产生了域名，<strong>域名的目的就是为数字化的互联网资源提供易于记忆的名称。</strong><br>特性：</p>
-<ol>
-<li>唯一性。</li>
-<li>在资源改IP地址时，只需要进行新IP地址与恒定域名的转换，即可实现资源移动到网络地址拓扑中的不同物理位置。</li>
-</ol>
-<hr>
-<h2 id="域名层次"><a href="#域名层次" class="headerlink" title="域名层次"></a>域名层次</h2><p><strong>顶级域名</strong>（TLD）是域名的最高一级，<strong>每个域名都以顶级域名结尾</strong><br>一些顶级域名列举</p>
-<ol>
-<li>.com：用于商业，现在是全球注册量最大、最通用的域名</li>
-<li>.edu：用于教育机构、很多学校网站都是用edu作为顶级域名</li>
-<li>.net：被定位于网络基础服务提供商</li>
-<li>.org：用于非盈利组织（如公益类的）</li>
-<li>.gov：用于政府，主要是美国政府的网站</li>
-<li>.int：国际组织<br><strong>备注</strong>：上面的顶级域名不用记住，有需要的话，找一下就好了</li>
-</ol>
-<hr>
-<p><strong>二级域名</strong>二级域名位于顶级域名的左侧。如<a href="http://www.baidu.com" target="_blank" rel="noopener">www.baidu.com</a> 其中baidu就是他的二级域名，又如zh.wikipedia.org中 wikipedia就是二级域名。<br><strong>三级域名</strong>三级域名位于二级域名的左侧，如zh.wikipedia.org中的zh就是三级域名<br>其他级别的域名以此类推，但一般域名级别<strong>不会超过五层</strong></p>
-<hr>
-<h2 id="域名层次的另一种说法（目前暂未有一个定论-来自维基百科）"><a href="#域名层次的另一种说法（目前暂未有一个定论-来自维基百科）" class="headerlink" title="域名层次的另一种说法（目前暂未有一个定论-来自维基百科）"></a>域名层次的另一种说法（目前暂未有一个定论-来自维基百科）</h2><p>这种说法是通过域名有多少个 <strong>点去判断是几级域名</strong>。<strong>如<a href="http://www.baidu.com这里有两个点，因此被称为二级域名，而baidu.com被称为一级域名，.com则被称为顶级域名。" target="_blank" rel="noopener">www.baidu.com这里有两个点，因此被称为二级域名，而baidu.com被称为一级域名，.com则被称为顶级域名。</a></strong><br>但。<strong>无论如何那种说法，完整域名的所有字符加起来都是不得超过253个ASCII字符的总长度。</strong></p>
-<hr>
-<p><a href="https://zh.wikipedia.org/wiki/%E5%9F%9F%E5%90%8D" target="_blank" rel="noopener">本文章主要信息来源于维基百科</a></p>
-
-          
+          域名域名又叫网域，全称网域名称（英语：Domain Name,）是由一串用点分隔的字符串组成的互联网上某一台计算机或计算机组的名称。作用：用于在数据传输时标识计算机的电子方位。域名可以说是一个IP地址的代称，目的是为了便于记忆后者。例子：wikipedia.org是一个域名，与IP地址208.80.
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/24/域名/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -971,6 +846,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/23/我的第一篇博客/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/23/我的第一篇博客/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -997,9 +882,16 @@
       
         
           
-            <h1 id="第一章"><a href="#第一章" class="headerlink" title="第一章"></a>第一章</h1><p>·····</p>
-<h2 id="第二章"><a href="#第二章" class="headerlink" title="第二章"></a>第二章</h2><h2 id="第三章"><a href="#第三章" class="headerlink" title="第三章"></a>第三章</h2><h2 id="第四章"><a href="#第四章" class="headerlink" title="第四章"></a>第四章</h2><h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2>
+          第一章·····
+第二章第三章第四章参考文献
           
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/23/我的第一篇博客/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1091,6 +983,16 @@
 
           
             
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/22/hello-world/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/22/hello-world/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
           
 
           
@@ -1117,17 +1019,15 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in 
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/22/hello-world/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1316,6 +1216,26 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user">本站访客数</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      人次
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye">本站总访问量</i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      次
+    </span>
+  
+</div>
+
 
 
 
@@ -1451,6 +1371,14 @@
 
   
 
+    
+      <script id="dsq-count-scr" src="https://小麦.disqus.com/count.js" async></script>
+    
+
+    
+
+  
+
 
 
 
@@ -1463,10 +1391,6 @@
   
 
 
-
-
-
-  
 
 
 
@@ -1502,3 +1426,5 @@
 
 </body>
 </html>
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/src/clicklove.js"></script>
