@@ -112,7 +112,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="面试题,js进阶,">
 
 
 
@@ -123,18 +123,18 @@
 
 
 
-<meta name="description" content="遇到你是我最大的幸运鸭">
-<meta name="keywords" content="学生 计算机 个人博客">
+<meta name="description" content="面试题：[“1”,”2”,”3”].map（parseInt）知识点map函数作用：数组中的每个元素都会执行一遍map的回调函数。参数：一个回调函数，回调函数接受三个参数，分别是，当前处理的数组元素（currentValue），该元素的下标（index），调用map的数组（array）。返回值：一个新的数组，值得注意的是，调用map的数组也会被改变，十分霸道 parseInt函数作用：将传进来的字">
+<meta name="keywords" content="面试题,js进阶">
 <meta property="og:type" content="article">
 <meta property="og:title" content="面试题：[1,2,3].map（parseInt）">
 <meta property="og:url" content="http://yoursite.com/2019/04/01/面试题：-1-2-3-map（parseInt）/index.html">
 <meta property="og:site_name" content="你家小麦">
-<meta property="og:description" content="遇到你是我最大的幸运鸭">
+<meta property="og:description" content="面试题：[“1”,”2”,”3”].map（parseInt）知识点map函数作用：数组中的每个元素都会执行一遍map的回调函数。参数：一个回调函数，回调函数接受三个参数，分别是，当前处理的数组元素（currentValue），该元素的下标（index），调用map的数组（array）。返回值：一个新的数组，值得注意的是，调用map的数组也会被改变，十分霸道 parseInt函数作用：将传进来的字">
 <meta property="og:locale" content="zh-hk">
-<meta property="og:updated_time" content="2019-04-01T12:09:19.370Z">
+<meta property="og:updated_time" content="2019-04-01T12:14:56.586Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="面试题：[1,2,3].map（parseInt）">
-<meta name="twitter:description" content="遇到你是我最大的幸运鸭">
+<meta name="twitter:description" content="面试题：[“1”,”2”,”3”].map（parseInt）知识点map函数作用：数组中的每个元素都会执行一遍map的回调函数。参数：一个回调函数，回调函数接受三个参数，分别是，当前处理的数组元素（currentValue），该元素的下标（index），调用map的数组（array）。返回值：一个新的数组，值得注意的是，调用map的数组也会被改变，十分霸道 parseInt函数作用：将传进来的字">
 
 
 
@@ -379,7 +379,24 @@
       
 
       
-        
+        <h1 id="面试题：-“1”-”2”-”3”-map（parseInt）"><a href="#面试题：-“1”-”2”-”3”-map（parseInt）" class="headerlink" title="面试题：[“1”,”2”,”3”].map（parseInt）"></a>面试题：[“1”,”2”,”3”].map（parseInt）</h1><h2 id="知识点"><a href="#知识点" class="headerlink" title="知识点"></a>知识点</h2><h3 id="map函数"><a href="#map函数" class="headerlink" title="map函数"></a>map函数</h3><p>作用：数组中的每个元素都会执行一遍map的回调函数。<br>参数：一个回调函数，回调函数接受三个参数，分别是，当前处理的数组元素（currentValue），该元素的下标（index），调用map的数组（array）。<br>返回值：一个新的数组，值得注意的是，调用map的数组也会被改变，十分霸道</p>
+<h3 id="parseInt函数"><a href="#parseInt函数" class="headerlink" title="parseInt函数"></a>parseInt函数</h3><p>作用：将传进来的字符串转变为整数。<br>参数：接受两个参数，分别是需要转换的字符串（string），基数（radix）（范围是2-36，就是我们平时理解的进制）</p>
+<blockquote>
+<p>当radix为0，或undefined或没有指定的值的时候</p>
+<blockquote>
+<p>当string的开头为ox时，指定是16进制<br>当时o开头的时候，就是8进制或十进制，这个和浏览器的实现有关<br>其他的值就是十进制</p>
+</blockquote>
+</blockquote>
+<h3 id="题目讲解"><a href="#题目讲解" class="headerlink" title="题目讲解"></a>题目讲解</h3><p>所以该题目map和parseInt之间传的值是数组元素和它的下标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;].map（parseInt）</span><br></pre></td></tr></table></figure>
+<p>等价于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[&quot;1&quot;,&quot;2&quot;,&quot;3&quot;].map((item,index)=&gt;&#123;</span><br><span class="line">	return parseInt(item,index);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>所以它的执行过程是</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parseInt(1,0) / 1</span><br><span class="line">parseInt(2,1)/ NaN</span><br><span class="line">parseInt(3,2)/ NaN</span><br></pre></td></tr></table></figure>
+<p>为什么呢，因为2进制最大的数字是1，3进制最大的数字是2，因此后面都比指定基数能接受的最大值大，因此都会返回NaN</p>
+<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>那当我们真的想要遍历数组中的字符串，然后返回一个装有数值的数组，应该如何解决</p>
+<h3 id="其中一个方法是用Number"><a href="#其中一个方法是用Number" class="headerlink" title="其中一个方法是用Number"></a>其中一个方法是用Number</h3><p>“1”,”2”,”3”].map(Number);</p>
+
       
     </div>
     
@@ -393,6 +410,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/面试题/" rel="tag"># 面试题</a>
+          
+            <a href="/tags/js进阶/" rel="tag"># js进阶</a>
+          
+        </div>
       
 
       
@@ -499,8 +524,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -539,7 +573,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">標籤</span>
                 </a>
               </div>
@@ -586,6 +620,22 @@ var jiathis_config={
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#面试题：-“1”-”2”-”3”-map（parseInt）"><span class="nav-number">1.</span> <span class="nav-text">面试题：[“1”,”2”,”3”].map（parseInt）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#知识点"><span class="nav-number">1.1.</span> <span class="nav-text">知识点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#map函数"><span class="nav-number">1.1.1.</span> <span class="nav-text">map函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#parseInt函数"><span class="nav-number">1.1.2.</span> <span class="nav-text">parseInt函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目讲解"><span class="nav-number">1.1.3.</span> <span class="nav-text">题目讲解</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解决方法"><span class="nav-number">1.2.</span> <span class="nav-text">解决方法</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#其中一个方法是用Number"><span class="nav-number">1.2.1.</span> <span class="nav-text">其中一个方法是用Number</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
